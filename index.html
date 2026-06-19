@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Data Kependudukan & Sosial Ekonomi Desa Pesisir - Balai PK Kupang</title>
+  
+  <!-- Google Fonts (Outfit & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- FontAwesome (Icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- 1. HEADER -->
+    <header class="main-header">
+      <div class="header-brand">
+        <img src="src/assets/images/Logo_KKP.png" alt="Logo KKP" class="logo-img logo-kkp">
+        <img src="src/assets/images/Logo_BalaiPK_Kupang.png" alt="Logo Balai PK Kupang" class="logo-img logo-bpk">
+        <div class="header-titles">
+          <span class="agency-title">BALAI PENGELOLAAN KELAUTAN KUPANG</span>
+          <h1 class="main-title">Dashboard Data Kependudukan dan Sosial Ekonomi Desa Pesisir</h1>
+          <span class="sub-agency-title">Direktorat Jenderal Pengelolaan Kelautan dan Ruang Laut - Kementerian Kelautan dan Perikanan</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3. FILTER BAR -->
+    <section class="filter-section card">
+      <div class="filter-grid">
+        <div class="filter-group search-group">
+          <label for="search-desa"><i class="fa-solid fa-magnifying-glass"></i> Pencarian Desa</label>
+          <input type="text" id="search-desa" placeholder="Ketik nama desa...">
+        </div>
+        <div class="filter-group">
+          <label for="filter-provinsi">Provinsi</label>
+          <select id="filter-provinsi">
+            <option value="">Semua Provinsi</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-kabupaten">Kabupaten</label>
+          <select id="filter-kabupaten">
+            <option value="">Semua Kabupaten</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-kecamatan">Kecamatan</label>
+          <select id="filter-kecamatan">
+            <option value="">Semua Kecamatan</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-kawasan">Kawasan Konservasi</label>
+          <select id="filter-kawasan">
+            <option value="">Semua Kawasan</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-desa">Desa</label>
+          <select id="filter-desa">
+            <option value="">Semua Desa</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. MAIN LAYOUT (SIDEBAR + MAP + SUMMARY) -->
+    <main class="main-layout">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar-left">
+        <nav class="sidebar-nav">
+          <button class="nav-btn active" data-tab="informasi_umum">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Informasi Umum</span>
+          </button>
+          <button class="nav-btn" data-tab="demografi">
+            <i class="fa-solid fa-users"></i>
+            <span>Demografi</span>
+          </button>
+          <button class="nav-btn" data-tab="sosial_ekonomi">
+            <i class="fa-solid fa-coins"></i>
+            <span>Sosial Ekonomi</span>
+          </button>
+          <button class="nav-btn" data-tab="kapal">
+            <i class="fa-solid fa-ship"></i>
+            <span>Data Kapal</span>
+          </button>
+          <button class="nav-btn" data-tab="alat_tangkap">
+            <i class="fa-solid fa-anchor"></i>
+            <span>Alat Tangkap</span>
+          </button>
+          <button class="nav-btn" data-tab="kelompok">
+            <i class="fa-solid fa-people-group"></i>
+            <span>Kelompok</span>
+          </button>
+          <button class="nav-btn" data-tab="infrastruktur">
+            <i class="fa-solid fa-warehouse"></i>
+            <span>Infrastruktur</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- CENTER MAP -->
+      <section class="map-container card">
+        <div class="map-header">
+          <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Peta Desa Pesisir</h2>
+          <div class="map-actions">
+            <span class="active-villages-count" id="active-villages-count">11 desa sesuai filter</span>
+            <button class="btn btn-secondary btn-sm" id="btn-reset-map"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
+        </div>
+        <div id="map"></div>
+      </section>
+
+      <!-- RIGHT SUMMARY PANEL -->
+      <aside class="summary-panel card">
+        <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> Ringkasan <span id="summary-title-scope">11 Desa</span></h2>
+        
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card bg-blue-light" data-drill="demografi">
+            <span class="metric-label">PENDUDUK</span>
+            <span class="metric-value" id="metric-penduduk">-</span>
+            <span class="metric-unit">Jiwa</span>
+          </div>
+          <div class="metric-card bg-orange-light" data-drill="demografi">
+            <span class="metric-label">KEPALA KELUARGA</span>
+            <span class="metric-value" id="metric-kk">-</span>
+            <span class="metric-unit">KK</span>
+          </div>
+          <div class="metric-card bg-green-light" data-drill="sosial_ekonomi">
+            <span class="metric-label">NELAYAN</span>
+            <span class="metric-value" id="metric-nelayan">-</span>
+            <span class="metric-unit">Orang</span>
+          </div>
+          <div class="metric-card bg-cyan-light" data-drill="kapal">
+            <span class="metric-label">KAPAL</span>
+            <span class="metric-value" id="metric-kapal">-</span>
+            <span class="metric-unit">Unit</span>
+          </div>
+          <div class="metric-card bg-red-light" data-drill="alat_tangkap">
+            <span class="metric-label">ALAT TANGKAP</span>
+            <span class="metric-value" id="metric-alat-tangkap">-</span>
+            <span class="metric-unit">Unit</span>
+          </div>
+          <div class="metric-card bg-purple-light" data-drill="kelompok">
+            <span class="metric-label">KELOMPOK</span>
+            <span class="metric-value" id="metric-kelompok">-</span>
+            <span class="metric-unit">Kelompok</span>
+          </div>
+          <div class="metric-card bg-teal-light" data-drill="infrastruktur">
+            <span class="metric-label">INFRASTRUKTUR</span>
+            <span class="metric-value" id="metric-infrastruktur">-</span>
+            <span class="metric-unit">Fasilitas</span>
+          </div>
+          <div class="metric-card bg-yellow-light" data-drill="sosial_ekonomi">
+            <span class="metric-label">UMKM</span>
+            <span class="metric-value" id="metric-umkm">-</span>
+            <span class="metric-unit">Usaha</span>
+          </div>
+        </div>
+
+      </aside>
+
+    </main>
+
+    <!-- 5. BOTTOM DETAIL PANEL (DRILL-DOWN) -->
+    <section class="detail-section card" id="detail-section">
+      <div class="detail-header">
+        <span class="detail-tag">PROFIL DAN DRILL-DOWN</span>
+        <h2 class="detail-title" id="detail-panel-title">Informasi Umum</h2>
+        <div class="detail-actions">
+          <span class="selected-scope-text" id="selected-scope-text">Cakupan Wilayah: Seluruh Desa</span>
+        </div>
+      </div>
+      <div class="detail-content" id="detail-panel-content">
+        <!-- Content will be rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-sources" id="footer-sources" style="display: none;"></div>
+      <p class="footer-copyright">&copy; 2026 Balai Pengelolaan Kelautan Kupang - Direktorat Jenderal Pengelolaan Kelautan dan Ruang Laut. All Rights Reserved.</p>
+    </footer>
+
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- App Javascript Modules -->
+  <script src="src/js/data-manager.js"></script>
+  <script src="src/js/app.js"></script>
+  <script src="src/js/filters.js"></script>
+  <script src="src/js/map.js"></script>
+  <script src="src/js/sidebar.js"></script>
+  <script src="src/js/summary.js"></script>
+  <script src="src/js/detail.js"></script>
+
+</body>
+</html>
